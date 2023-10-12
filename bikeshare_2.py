@@ -1,7 +1,14 @@
+"""
+This script analyzes US bikeshare data for three major cities: Chicago, New York City, and Washington.
+It allows users to filter the data by city, month, and day of the week.
+The script then provides various statistics such as the most frequent times of travel, popular stations, trip duration, and user demographics.
+"""
+
 import time
 import pandas as pd
 import numpy as np
 
+# Dictionary mapping city names to their respective data file names.
 CITY_DATA = {'chicago': 'chicago.csv',
              'new york city': 'new_york_city.csv',
              'washington': 'washington.csv'}
@@ -9,12 +16,14 @@ CITY_DATA = {'chicago': 'chicago.csv',
 
 def get_filters():
     """
-    Asks user to specify a city, month, and day to analyze.
+    Asks the user to specify a city, month, and day to analyze from the available bikeshare data.
+    The user can choose from three cities: Chicago, New York City, and Washington.
+    For month and day, the user can either specify a particular month/day or choose 'all' to consider all months/days.
 
     Returns:
-        (str) city - name of the city to analyze
-        (str) month - name of the month to filter by, or "all" to apply no month filter
-        (str) day - name of the day of week to filter by, or "all" to apply no day filter
+        city (str): Name of the city selected by the user.
+        month (str): Name of the month selected by the user or "all".
+        day (str): Name of the day selected by the user or "all".
     """
     print("Hello! Let's explore some US bikeshare data!")
     # get user input for city (chicago, new york city, washington). HINT: Use a while loop to handle invalid inputs
@@ -45,20 +54,26 @@ def get_filters():
 
 def load_data(city, month, day):
     """
-    Loads data for the specified city and filters by month and day if applicable.
+    Loads bikeshare data for the specified city and applies filters based on the month and day if provided.
+    The data is read from a CSV file corresponding to the city. Additional columns for month and day of the week are added to the DataFrame.
 
     Args:
-        (str) city - name of the city to analyze
-        (str) month - name of the month to filter by, or "all" to apply no month filter
-        (str) day - name of the day of week to filter by, or "all" to apply no day filter
+        city (str): Name of the city to analyze.
+        month (str): Name of the month to filter by or "all" for no month filter.
+        day (str): Name of the day to filter by or "all" for no day filter.
+
     Returns:
-        df - Pandas DataFrame containing city data filtered by month and day
+        df (DataFrame): Pandas DataFrame containing the filtered city data.
     """
     df = pd.read_csv(CITY_DATA[city])
 
+    # Convert 'Start Time' column to datetime format
     df['Start Time'] = pd.to_datetime(df['Start Time'])
+
+    # Extract month and day of the week from 'Start Time' and create new columns
     df['month'] = df['Start Time'].dt.month
     df['day_of_week'] = df['Start Time'].dt.day_name()
+
 
     if month != 'all':
         months = ['january', 'february', 'march', 'april', 'may', 'june']
@@ -195,6 +210,8 @@ def main():
 
         restart = input('\nWould you like to restart? Enter yes or no.\n')
         if restart.lower() != 'yes':
+            print("Thank you for using the US Bikeshare Data Analysis tool!")
+            time.sleep(5) # Pauses the program for 5 seconds before closing it
             break
 
 
