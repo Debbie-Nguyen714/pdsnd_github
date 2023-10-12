@@ -10,37 +10,34 @@ CITY_DATA = {'chicago': 'chicago.csv',
 def get_filters():
     """
     Asks user to specify a city, month, and day to analyze.
-
-    Returns:
-        (str) city - name of the city to analyze
-        (str) month - name of the month to filter by, or "all" to apply no month filter
-        (str) day - name of the day of week to filter by, or "all" to apply no day filter
     """
     print("Hello! Let's explore some US bikeshare data!")
-    # get user input for city (chicago, new york city, washington). HINT: Use a while loop to handle invalid inputs
-    city = ''
-    while city not in CITY_DATA:
-        print("Please select either Chicago, New York City, or Washington. Remember to double check your spelling!")
-        city = input().lower()
-
-    # get user input for month (all, january, february, ... , june)
-    months_list = ['january', 'february', 'march', 'april', 'may', 'june', 'all']
-    month = ''
-    while month not in months_list:
-        print(
-            "What month would you like to filter by? Please enter a month from January to June or enter 'all' if you would like to view all six months in the data. Please make sure you are using the full month name with no abbreviations.")
-        month = input().lower()
-
-    # get user input for day of week (all, monday, tuesday, ... sunday)
-    days_list = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'all']
-    day = ''
-    while day not in days_list:
-        print(
-            "What day of the week would you like to filter by? Please enter a day of the week or enter 'all' if you would like to view all days in the data. Please make sure you are using the full day name with no abbreviations.")
-        day = input().lower()
+    
+    prompts = {
+        'city': {
+            'choices': CITY_DATA.keys(),
+            'message': "Please select either Chicago, New York City, or Washington. Remember to double check your spelling!"
+        },
+        'month': {
+            'choices': ['january', 'february', 'march', 'april', 'may', 'june', 'all'],
+            'message': "What month would you like to filter by? Please enter a month from January to June or enter 'all' if you would like to view all six months in the data. Please make sure you are using the full month name with no abbreviations."
+        },
+        'day': {
+            'choices': ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'all'],
+            'message': "What day of the week would you like to filter by? Please enter a day of the week or enter 'all' if you would like to view all days in the data. Please make sure you are using the full day name with no abbreviations."
+        }
+    }
+    
+    responses = {}
+    for key, value in prompts.items():
+        user_input = ''
+        while user_input not in value['choices']:
+            print(value['message'])
+            user_input = input().lower()
+        responses[key] = user_input
 
     print('-' * 40)
-    return city, month, day
+    return responses['city'], responses['month'], responses['day']
 
 
 def load_data(city, month, day):
