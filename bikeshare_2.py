@@ -90,24 +90,28 @@ def display_raw_data(df):
 def time_stats(df):
     """Displays statistics on the most frequent times of travel."""
 
-    print('\nCalculating The Most Frequent Times of Travel...\n')
     start_time = time.time()
 
     # display the most common month
     common_month = df['month'].mode()[0]
-    print(f"Most common month: {common_month}")
 
     # display the most common day of week
     common_day_of_week = df['day_of_week'].mode()[0]
-    print(f"Most common day: {common_day_of_week}")
 
     # display the most common start hour
     df['hour'] = df['Start Time'].dt.hour
     common_hour = df['hour'].mode()[0]
-    print(f"Most common hour: {common_hour}")
 
-    print("\nThis took %s seconds." % (time.time() - start_time))
-    print('-' * 40)
+    print(f"""
+    Calculating The Most Frequent Times of Travel...
+
+    Most common month: {common_month}
+    Most common day: {common_day_of_week}
+    Most common hour: {common_hour}
+
+    This took {time.time() - start_time} seconds.
+    {'-' * 40}
+    """)
 
 
 def station_stats(df):
