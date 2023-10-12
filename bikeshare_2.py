@@ -16,40 +16,35 @@ CITY_DATA = {'chicago': 'chicago.csv',
 
 def get_filters():
     """
-    Asks the user to specify a city, month, and day to analyze from the available bikeshare data.
-    The user can choose from three cities: Chicago, New York City, and Washington.
-    For month and day, the user can either specify a particular month/day or choose 'all' to consider all months/days.
-
-    Returns:
-        city (str): Name of the city selected by the user.
-        month (str): Name of the month selected by the user or "all".
-        day (str): Name of the day selected by the user or "all".
+    Asks user to specify a city, month, and day to analyze.
     """
     print("Hello! Let's explore some US bikeshare data!")
-    # get user input for city (chicago, new york city, washington). HINT: Use a while loop to handle invalid inputs
-    city = ''
-    while city not in CITY_DATA:
-        print("Please select either Chicago, New York City, or Washington. Remember to double check your spelling!")
-        city = input().lower()
-
-    # get user input for month (all, january, february, ... , june)
-    months_list = ['january', 'february', 'march', 'april', 'may', 'june', 'all']
-    month = ''
-    while month not in months_list:
-        print(
-            "What month would you like to filter by? Please enter a month from January to June or enter 'all' if you would like to view all six months in the data. Please make sure you are using the full month name with no abbreviations.")
-        month = input().lower()
-
-    # get user input for day of week (all, monday, tuesday, ... sunday)
-    days_list = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'all']
-    day = ''
-    while day not in days_list:
-        print(
-            "What day of the week would you like to filter by? Please enter a day of the week or enter 'all' if you would like to view all days in the data. Please make sure you are using the full day name with no abbreviations.")
-        day = input().lower()
+    
+    prompts = {
+        'city': {
+            'choices': CITY_DATA.keys(),
+            'message': "Please select either Chicago, New York City, or Washington. Remember to double check your spelling!"
+        },
+        'month': {
+            'choices': ['january', 'february', 'march', 'april', 'may', 'june', 'all'],
+            'message': "What month would you like to filter by? Please enter a month from January to June or enter 'all' if you would like to view all six months in the data. Please make sure you are using the full month name with no abbreviations."
+        },
+        'day': {
+            'choices': ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday', 'all'],
+            'message': "What day of the week would you like to filter by? Please enter a day of the week or enter 'all' if you would like to view all days in the data. Please make sure you are using the full day name with no abbreviations."
+        }
+    }
+    
+    responses = {}
+    for key, value in prompts.items():
+        user_input = ''
+        while user_input not in value['choices']:
+            print(value['message'])
+            user_input = input().lower()
+        responses[key] = user_input
 
     print('-' * 40)
-    return city, month, day
+    return responses['city'], responses['month'], responses['day']
 
 
 def load_data(city, month, day):
@@ -108,24 +103,28 @@ def display_raw_data(df):
 def time_stats(df):
     """Displays statistics on the most frequent times of travel."""
 
-    print('\nCalculating The Most Frequent Times of Travel...\n')
     start_time = time.time()
 
     # display the most common month
     common_month = df['month'].mode()[0]
-    print(f"Most common month: {common_month}")
 
     # display the most common day of week
     common_day_of_week = df['day_of_week'].mode()[0]
-    print(f"Most common day: {common_day_of_week}")
 
     # display the most common start hour
     df['hour'] = df['Start Time'].dt.hour
     common_hour = df['hour'].mode()[0]
-    print(f"Most common hour: {common_hour}")
 
-    print("\nThis took %s seconds." % (time.time() - start_time))
-    print('-' * 40)
+    print(f"""
+    Calculating The Most Frequent Times of Travel...
+
+    Most common month: {common_month}
+    Most common day: {common_day_of_week}
+    Most common hour: {common_hour}
+
+    This took {time.time() - start_time} seconds.
+    {'-' * 40}
+    """)
 
 
 def station_stats(df):
